@@ -40,6 +40,13 @@ def avg_word(sentence):
 train['avg_word'] = train['tweet'].apply(lambda t: avg_word(t))
 train[['tweet','avg_word']].head()
 
+# HTML Encoding
+#string = train.tweet[1]
+#text_decode = bs(string, 'lxml').get_text()
+
+# Removing URL Links
+# There are no URL Links in the tweet text
+# re.sub('https?://[A-Za-z0-9./]+', '', train.tweet[13])
 
 # Removing special characters
 from nltk.tokenize import WordPunctTokenizer
@@ -54,17 +61,20 @@ rem_1 = r"@[\w]+"
 rem_3 = '[^\w\']+'
 join_3 = r'|'.join((rem_1, rem_3))
 
+# re.findall(r'www. *\w+. ?com',  'so glad my #workout includes smoke breaks... www. smokeweedeatbacon. com #weed
+# re.findall(r'www *\w+ ?com',  'www sexgirl com hk   hardcore eye opener')
+# re.findall(r'www\w+com',  'porn vids wwwsmallgirlsexcom')
+# re.findall(r'www.\w+.com',  'www.flybcc.com')
+# re.findall(r'www.\w+',  'couple having sex www.drunk singapore girl get fuck ')
+# re.findall(r'www.\w+/\w+',  '@user just run 10kms for pour donner: www.alvarum/heloiseetlespremas')
+
 # remove all www links 
 rem_www = r'www.\w+.\w+[^ ]+'
 train['tweet'] = train['tweet'].str.replace(rem_www,'')
 
-train['tweet'].head()
+train['tweet'][23844]
 
-# Fixing shorthands 
-train['tweet'] = train['tweet'].str.replace('u','you')
-train['tweet'] = train['tweet'].str.replace('cus','becuase')
 
-# function to clean data 
 def tweet_cleaning(text):
   soup = bs(text,'lxml')
   soup = soup.get_text()
@@ -72,9 +82,22 @@ def tweet_cleaning(text):
   words = detok.detokenize(words, return_str = True)
   words =  (" ".join(words)).strip()
   words = re.sub(join_3,' ', soup)
+#  words = words.replace(" '", "'")
+#  words = words.replace("' ", "'")
+#  words = words.replace("&", "and")
+#  words = words.replace(" !", "!")
+#  words = words.replace(" .", "")
+#  words = words.replace(". ", ".")
+#  words = re.sub(r'www. *\w+. ?com','', words)
+#  words = re.sub(r'www *\w+ ?com','', words)
+#  words = re.sub(r'www\w+com','', words)
+#  words = re.sub(r'www.\w+.com','', words)
+# re.sub(" ?' ?", "'", words)
+#  output = "'".join(output.split(" '"))
+#  output = "'".join(output.split("' "))
   return words
 
-notclean_tweet = train.tweet[:]
+notclean_tweet = train.tweet[11110:11119]
 cleaned_tweet = []
 for t in notclean_tweet:
   cleaned_tweet.append(tweet_cleaning(t))
@@ -84,6 +107,16 @@ cleaned_tweet
 clean_df = pd.DataFrame(cleaned_tweet, columns = ['tweet'])
 clean_df['Result'] = train.label
 clean_df
+clean_df.info()
+# text1 =  train.tweet[1619]
+# pattern = "[^\w ]+ "
+# soup =  bs(text1,'lxml')
+# soup = soup.get_text()
+# text1 = re.sub(pattern,'', soup)
+# tk = tok.tokenize(text1)
+# #output =  (' '.join(tk)).strip()
+# output = detok.detokenize(tk, return_str = True )
+# re.sub(" ?' ?", "'", output)
 
 # part 2 - Word Cloud using the Python Library WordCloud
 hate_tweets = clean_df[clean_df.Result == 1]
@@ -92,50 +125,6 @@ for t in hate_tweets.tweet:
   hate_string.append(t)
 hate_string = pd.Series(hate_string).str.cat(sep = ' ')
 
-# word cloud for positive words
-pos_tweets = clean_df[clean_df.Result == 0]
-pos_strings = []
-for t in pos_tweets.tweet:
-    pos_strings.append(t)
-pos_strings = pd.Series(pos_strings).str.cat(sep= ' ')
-
 from wordcloud import WordCloud
-wordcloud = WordCloud(width =1600, height =1000, max_font_size=200).generate(pos_strings)
-plt.figure(figsize=(12,10))
-plt.imshow(wordcloud, interpolation = "bilinear")
-plt.show()
-
-#word cloud for negative words 
-neg_tweets = clean_df[clean_df.Result == 1]
-neg_strings = []
-for t in neg_tweets.tweet:
-    neg_strings.append(t)
-neg_strings = pd.Series(neg_strings).str.cat(sep= ' ')
-
-from wordcloud import WordCloud
-wordcloud = WordCloud(width =1600, height =1000, max_font_size=200).generate(neg_strings)
-plt.figure(figsize=(12,10))
-plt.imshow(wordcloud, interpolation = "bilinear")
-plt.show()
-
-# identify commonly used words like user as shown in the wordcloud 
-freq = pd.Series(' '.join(clean_df['tweet']).split()).value_counts()[:10]
-freq
-
-# remove commonly used words
-freq = list(freq.index)
-clean_df['tweet'] = clean_df['tweet'].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
-clean_df['tweet'].head()
 
 
-# Remove rarely occuring words
-freq = pd.Series(' '.join(clean_df['tweet']).split()).value_counts()[-20:]
-freq
-freq = list(freq.index)
-clean_df['tweet'] = clean_df['tweet'].apply(lambda x: " ".join(x for x in x.split() if x not in freq))
-clean_df['tweet'].head()
-
-# Spelling correction
-# conda install -c conda-forge textblob
-from textblob import TextBlob
-clean_df['tweet'][:5].apply(lambda x: str(TextBlob(x).correct()))
