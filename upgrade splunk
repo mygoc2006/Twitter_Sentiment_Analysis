@@ -1,0 +1,72 @@
+upgrade splunk
+
+############## upgrade single instance splunk #################
+
+
+1. verify version and stop splunk
+2. backup the /opt/splunk/etc dir 
+3. install the new verions of splunk
+4. extract the back up file
+5. start splunk
+
+
+1. ./splunk version
+	./splunk stop
+	
+
+2. cd into the /opt dir and backup the /splunk dir
+   tar -czvf splunk-8-2-3-backup.tgz /splunk
+
+3. install new splunk version
+   cd /opt
+   paste the wget code there.
+wget -O splunk-9.0.0-6818ac46f2ec-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.0.0/linux/splunk-9.0.0-6818ac46f2ec-Linux-x86_64.tgz"
+
+chown -Rf splunk:splunk $SPLUNK_HOME
+
+
+4. extract the backup file of the new splunk
+   cd into the /opt directory and extract the backup file
+
+   tar -xzvf splunk-8.2.4-backup.tgz
+
+5. cd to root dir 
+    cd ~
+    chown -R splunk:splunk /opt/splunk
+
+  chown -Rf splunk:splunk $SPLUNK_HOME
+
+6. ./splunk start --accept-license
+
+
+
+
+###################################################################################
+############### follow this routine in upgrading the splunk deployment ############
+###################################################################################
+
+1. Upgrade management nodes first
+	manager node
+	deployer
+	deployment server
+	licence master
+
+2. search head
+
+3. indexess
+
+4. Heavy forwarders
+
+5. UF's - work with Win/Linux tools 
+
+Never upgrade to the latest and greatet. always upgrade to the most stable vesion. this can be a version or 2 versions before the latest.
+
+https://docs.splunk.com/Documentation/Splunk/9.0.2/Installation/AboutupgradingREADTHISFIRST
+
+Write scripts for the upgrades
+
+use cases with logs
+
+1. monitor you router logs at home
+
+2. case: you have an airline business, how do you monitor the logs

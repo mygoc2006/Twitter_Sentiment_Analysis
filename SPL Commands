@@ -1,0 +1,54 @@
+SPL Commands
+
+EVAL
+
+
+STATS
+
+
+TIMECHART
+
+
+Reporting Results
+STATS
+TOP
+CHART
+TIMECHART
+
+
+Filtering, Modifying, and Adding Fields
+FIELDS
+REPLACE
+EVAL
+REX
+EREX
+LOOKUP
+TABLE
+
+
+Grouping Results
+TRANSACTION
+
+
+Other Commands
+MARERESULTS
+ADDTOTALS
+ADDCOLTOTALS
+
+
+Stats  | Eventstats | StreamStats
+
+tstats
+
+# Timechart with addcoltotals and  
+index = web | timechart span=1d count by host 
+index = web  | timechart span=1d count by host | addcoltotals  labelfield=_time label=Total
+index = web  | timechart span=1d count by host | addtotals fieldname="Total Events Indexed"
+
+
+# Stats count by <fieldname>
+index=_internal source=*metrics.log | stats count by group
+
+
+
+index=_internal source=*metrics.log* group="tcpin_connections" |stats sum(kb) by hostname,sourceHost,os |sort -sum(kb) | rename sourceHost AS HostIP, hostname AS HostName, os AS OSType

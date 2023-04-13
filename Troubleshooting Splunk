@@ -1,0 +1,66 @@
+Troubleshooting Splunk
+# Internal Logs
+
+
+################
+#Internal Logs
+######################
+
+
+{splunkd_access.log, splunkd_stderr.log, splunkd_stdout.log, splunkd_ui_access.log, splunkd_utility.log}
+
+splunkd.log ---> most important
+
+audit.log
+btool.log
+conf.log
+crash.log
+licence_usage.log
+metrics.log
+
+migration.log
+MSI.log --------> Winddows specific logs
+scheduler.log -------> schedule searches
+search.log
+resouce_usage.log
+kvstore.log
+
+
+Data LifeCyle
+Input ->Parsing ->Indexing ->Search
+
+#####Inputs Phase
+#####################################
+File Monitor  -> Tailing Processor 
+Script 		  -> Exec Processor
+Modular Input -> Mod Input Processor
+Hec 		  -> Hec Processor
+TCP/UDP  	  -> Tcp/Udp Processor
+
+
+#### File Monitor Inputs
+###############################
+Tailing processor 
+File Update Notify ->Tail Reader 
+							->Achives -> Achieve Processor
+							-> <20 MB ->
+							-> > 20 MB -> Batch Reader 
+
+###########
+## Debug Mode
+#######################
+settings -> server settings - > server loggings - Exec Proc - change INFO TO DEBUGG
+
+
+#####Scripted Inputs
+
+
+
+############
+HEC INPUTS
+######################
+
+Hec Processor 
+Main logging for HEC data is stored to the _introspection index (NOT _internal)
+Error logging for Hec Processor is stored to splunkd _internal 
+Component name - - HttpInputDataHandler

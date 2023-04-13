@@ -1,0 +1,265 @@
+# syslong-ng
+# version 3
+# date modified 3/12/2023
+
+https://www.nuharborsecurity.com/splunk-data-onboarding-success-with-syslog-ng-and-splunk-part-2
+
+S1:	Check system updates
+	Sudo apt-get update
+	sum yum update
+
+
+S2: Check syslog-ng status to see if its already installed 
+	Systemctl status syslog-ng
+
+
+S3: Check dependencies for RHEL and CenOS – Use RHEL/CentOS over Ubuntu 
+	Add EPEL repo
+	dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+
+S4: Installing syslog-ns 
+
+	CentOS Installation
+
+	### Add repo
+	sudo dnf install epel-release -y
+
+	### Install, start and enable Syslog-NG
+	sudo dnf install syslog-ng -y
+	sudo systemctl enable syslog-ng
+	sudo systemctl start syslog-ng
+
+	### Enable syslog-ng to start at boot time
+	# chkconfig syslog-ng on
+
+
+	###install Syslog-ng on RHEL-9
+
+	###Verify that syslog-ng is active
+	sudo systemctl status syslog-ng
+
+
+	RHEL installation 
+
+	###Add repo
+	dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+	###Install, start and enable Syslog-NG
+	yum install syslog-ng
+	sudo systemctl enable syslog-ng
+	sudo systemctl start syslog-ng
+
+	###Verify that syslog-ng is active and check version
+	Systemctl status syslog-ng , syslog-ng -V
+
+
+S5: Disable rsyslog
+	Turn off rsyslog and disable the rsyslog service from starting at boot time
+
+	service rsyslog stop
+	hkconfig rsyslog off
+
+
+S6: Modifying IPTables to allow UDP traffic
+
+	###Check iptables to determine which ports are open. (-L option lists by service, -n by port number)
+
+	iptables –L –n
+
+	###Add unique ports to the iptables
+	
+	iptables -A INPUT -i eth0 -p tcp --dport 514 -j ACCEPT
+	iptables -A INPUT -p udp -m udp --dport 5514 -j ACCEPT
+
+
+S7: Check default syslog-ng.conf to make sure it include the line below
+	@include "/etc/syslog-ng/conf.d/*.conf"
+
+ 
+S8:	Create a custom base configuration syslog-ng file under /etc/syslog-ng/conf.d directory
+	vi /etc/syslog-ng/conf.d/default.conf
+
+	#########################################################
+	### #########------Sample 1
+	#########################################################
+
+# syslog-ng configuration file.
+# version 3.2
+# data modified: Saturday 3/11/2023
+
+options {
+chain_hostnames(no);
+create_dirs (yes);
+dir_perm(0755);
+dns_cache(yes);
+keep_hostname(yes);
+log_fifo_size(2048);
+log_msg_size(8192);
+perm(0644);
+time_reopen (10);
+use_dns(yes);
+use_fqdn(yes);
+};
+
+###################
+#source
+################
+
+#source s_network {
+	udp(port(5514)); udp(port(5515)); tcp(port(5514)); tcp(port(5515)); 
+};
+
+source s_cisco { tcp(port(5515)); udp(port(5515)); };
+
+source s_palo { tcp(port(5514)); udp(port(5514)); };
+
+
+#################
+#destinations
+###############
+
+destination d_cisco_asa { file("/home/syslog/logs/ciscoasa/$HOST/$YEAR-$MONTH-$DAY-cisco-asa.log" create_dirs(yes)); };
+destination d_palo_alto { file("/home/syslog/logs/paloalto/$HOST/$YEAR-$MONTH-$DAY-palo.log" create_dirs(yes)); };
+destination d_all { file("/home/syslog/logs/catch_all/$HOST/$YEAR-$MONTH-$DAY-catch_all.log" create_dirs(yes)); };
+
+###############
+#filter
+##############
+
+#filter f_cisco_asa { match(“cisco” value(“MESSAGE”)); };
+#filter f_palo_alto { match(“123” value(“MESSAGE”)); };
+#filter f_all { not (
+#filter(f_cisco_asa) or
+#filter(f_palo_alto)
+#);
+#};
+
+###################
+#log
+################
+
+log { source(s_cisco);  destination(d_cisco_asa); };
+log { source(s_palo);  destination(d_palo_alto); };
+log { source(s_palo); source(s_cisco);  destination(d_all); };
+
+
+S9: Check syslog-ng syntax
+	syslog-ng –syntax-only
+
+
+S9: Configuring SELinux : (vi /etc/selinux/config)
+	###Check SELinux status
+		sestatus
+
+	#### Change mode from enforcing to permissive
+		setenforce 0
+
+
+S9: create a dummy logs and test if the sylog-server is receiving logs
+	open a tcp listening port on server :
+		tcpdump src 34.125.135.169 and port 1514
+
+	create dummy logs using nc: use private ip
+		nc -w0 -t 172.31.7.65 1514 <<< " test data 1"
+
+
+S10: install UF or HF on syslog-server to help bring data into splunk
+	## The sourcetype that we are using for our parsing within Splunk
+	## host_segment defines the subdirectory in our path that contains the hostname of our device
+
+	[monitor:///opt/syslog/logs/cisco-asa/*/*.log]
+	disabled = 0
+	hostname_segment = 5
+	index = network_firewall
+	sourcetype = cisco:asa
+
+
+S11: Set up log ratation
+	find /opt/syslog-ng/logs/ -daystart -mtime +14 -type f -exec rm {} \;
+
+
+sample 2
+
+	#########################################################
+	### #########------Sample 2
+	#########################################################
+
+	##################
+	##### option 
+	##################
+
+	options {
+	create_dirs (yes);
+	dir_owner("splunk");
+	dir_group("splunk");
+	dir_perm(0755);
+	owner("splunk");
+	group("splunk");
+	perm(0644);
+	log_fifo_size(2048);
+	log_msg_size(8192);
+	#frac_digits(3);
+	time_reopen (10);
+	check_hostname (yes);
+	keep_hostname(no);
+	use_dns(yes);
+	use_fqdn(no);
+	#normalize_hostname(yes);
+	dns_cache(yes);
+	dns_cache_size(1007);
+	};
+
+	##############################
+	## source
+	#############################
+	source s_tcp_network {
+	network(ip(0.0.0.0) port(5514) transport(tcp));
+	 };
+
+
+	##############################
+	## destination
+	#############################
+
+	destination d_cisco_asa { file("/opt/syslog-ng/logs/cisco-asa/${HOST}/${YEAR}-${MONTH}-${DAY}-cisco-asa.log" ); };
+
+	##############################
+	## log
+	#############################
+
+	log {  source(s_tcp_network);  destination(d_cisco_asa);  };
+	[root@ip-172-31-7-65 conf.d]#
+
+	------------------------------
+
+
+
+	# version 1.0
+	# date modified - 3/11/2023
+
+	##############################
+	##### source
+	#############################
+
+	source s_cloudlog { file("/var/log/cloud-init.log"); };
+
+
+	##############################
+	##### destination
+	#############################
+
+	destination d_syslog_server {
+	        network("172.31.7.65" port(5514) );
+	};
+
+	##############################
+	##### log
+	#############################
+
+	log {  source(s_cloudlog);  destination(d_syslog_server);  };
+
+
+
+
+

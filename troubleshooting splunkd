@@ -1,0 +1,57 @@
+
+
+##################
+tail -f 
+###################
+
+troubleshooting logs - splunkd.log
+	tail -f /opt/splunkforwarder/var/log/splunk/splunkd.log
+
+	tail -f 100 /opt/splunkforwarder/var/log/splunk/splunkd.log
+
+
+
+######################
+btols
+######################
+
+btool to check typos in config files - ./splunk btool check 
+
+--debug - shows content of config files and their location
+	eg. ./splunk btool inputs list --debug
+
+grep command in linux - used to request a specific results from the btool search
+	eg. ./splunk btool inputs list | grep index
+	eg. ./splunk btool inputs list --debug | grep monitor
+
+# btool 
+	https://docs.splunk.com/Documentation/Splunk/9.0.1/Troubleshooting/Usebtooltotroubleshootconfiguration
+
+#########################
+Generating Errors 
+Review Splunk messgages  
+Troubleshooting method
+#########################
+
+1. Typo errors in outputs.conf 
+if there is an errors in outputs.conf, the internal logs from the forwarding  nodes will not show in the search head.
+
+
+
+2. Internal logs is showing but data from index is not showing.
+troubleshoot with tail -f 
+
+dmesg.0
+
+[monitor:///var/log/dmesg.0]
+disabled = 0
+index = main
+sourcetype = messages
+
+
+###################
+change a splunk user to root
+########################
+
+/opt/splunkforwarder/etc/splunk-launch.conf
+SPLUNK_OS-USER = root

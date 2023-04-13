@@ -1,0 +1,79 @@
+SSH to AWS Terminal Page
+
+update the GNU wget package - it is a free GNU command line utility used to download files from the internet HTTP, HTTPS, FTP
+	yum install wget
+
+Change to root user and tmp directory
+	
+		sudo su 
+		cd /tmp
+
+paste the download code
+	
+	wget -O splunk-8.2.7-2e1fca123028-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/8.2.7/linux/splunk-8.2.7-2e1fca123028-Linux-x86_64.tgz"
+
+untar the file and change dir (-C) to opt dir
+
+	tar xvzf splunk-8.2.7-2e1fca123028-Linux-x86_64.tgz -C /opt
+
+Create a system user and add that user to a group and add the user to sudoers list
+
+	sudo adduser splunk 
+
+	sudo usermod -aG sudo splunk 
+
+create a file name user-see.conf and echo(print) the username and password into it.
+
+	sudo echo -e "[user_info]\nUSERNAME = admin\nPASSWORD = Micah0720" > /opt/splunk/etc/system/local/user-seed.conf
+
+When you touch a file, you're "putting fresh fingerprints on it", updating its last-modified date (or creating it if it did not yet exist)
+
+	sudo touch /opt/splunk/etc/.ui_login
+
+Creat Environment Variable
+
+	echo "export SPLUNK_HOME=/opt/splunk" > /etc/profile.d/splunk.sh
+	
+	export SPLUNK_HOME=/opt/splunk
+
+
+Change file owner and group to make sure that every file is owned by splunk
+
+	chown -Rf splunk:splunk $SPLUNK_HOME
+
+Enable bootstart  and Accept Licence
+
+	sudo /opt/splunk/bin/splunk enable boot-start -user splunk --accept-license --answer-yes --no-prompt
+
+	sudo -u splunk echo -e "[settings]\nstartwebserver = True\nenableSplunkWebSSL = True\nsslVersions = tls1.2\n" >> /opt/splunk/etc/system/local/web.conf
+
+	sudo echo -e "DefaultLimitNOFILE=65535" >> /etc/systemd/system.conf
+
+	sudo echo -e "DefaultLimitNOFILE=65535" >> /etc/systemd/user.conf
+
+	echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
+	echo never > /sys/kernel/mm/transparent_hugepage/defrag
+
+	chown -R splunk:splunk $SPLUNK_HOME
+
+	sudo su - splunk
+
+	/opt/splunk/bin/splunk start
+
+
+./splunk set servername Indexer-1S
+
+./splunk set default-hostname Indexer-1
+
+servername is used to identify the Splunk instance for features such as distributed search and defaults to <hostname>-<user running splunk>. You set this in server.conf.
+
+default-hostname is used as default "host" field on all events coming from that Splunk instance. You set this in inputs.conf.
+
+https://splunkonbigdata.com/how-to-uninstall-splunk-from-linux/
+
+
+view linux users 
+cut -d: -f1 /etc/passwd
+
+splunk version 9
