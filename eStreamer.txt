@@ -1,5 +1,0 @@
-rec_type=95 event_sec=1682098869 device_id=22 event_usec=802399 event_subtype=2 event_type=1004 mac_address=00:00:00:00:00:00 email="" ipv4=0.0.0.0 ipv6=b'00000000000000000000ffff0aa1018c' login_type=0 reported_by="" timestamp=1682098869 user=1 username=KMorehou rec_type_category=RUA rec_type_desc="User Login Change Event" sensor=ELK-NS-INTERNAL-01 event_desc="User Login Information"
-
-rec_type=95 event_sec=1682098866 device_id=22 event_usec=617492 event_subtype=2 event_type=1004 mac_address=00:00:00:00:00:00 email="" ipv4=0.0.0.0 ipv6=b'00000000000000000000ffffac10d021' login_type=0 reported_by="" timestamp=1682098866 user=1 username=nborisse rec_type_category=RUA rec_type_desc="User Login Change Event" sensor=ELK-NS-INTERNAL-01 event_desc="User Login Information"
-
-rec_type=95 event_sec=1682098866 device_id=22 event_usec=179628 event_subtype=2 event_type=1004 mac_address=00:00:00:00:00:00 email="" ipv4=0.0.0.0 ipv6=b'00000000000000000000ffff0a990a67' login_type=0 reported_by="" timestamp=1682098866 user=1 username=EBear rec_type_category=RUA rec_type_desc="User Login Change Event" sensor=ELK-NS-INTERNAL-01 event_desc="User Login Information"
