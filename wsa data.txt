@@ -1,0 +1,16 @@
+SPLUNK_Access Info: 1683226287.853 54 172.16.199.55 TCP_MISS_SSL/200 0 TCP_CONNECT 172.217.0.174:443 - DIRECT/android.clients.google.com - DECRYPT_ADMIN_2-NONE-AuthenticationLDAP-DefaultGroup-NONE-NONE-DefaultGroup-NONE <"-",-,-,"-",-,-,-,-,"-",-,-,-,"-",-,-,"-","-",-,-,"-",-,"-","-","-","-","-","-","-",0.00,0,-,"-","-",-,"-",-,-,"-","-",-,-,"-",-,-> - -
+
+
+SPLUNK_Access Info: 1683226287.844 563 172.16.193.57 TCP_MISS/200 10336 TCP_CONNECT 52.109.16.111:443 "bplanica@Mortgage" DIRECT/roaming.officeapps.live.com - PASSTHRU_CUSTOMCAT_7-DefaultGroup-Bank_and_Cert_Sites-DefaultGroup-NONE-NONE-DefaultGroup-NONE <"C_Laye",-,-,"-",-,-,-,-,"-",-,-,-,"-",-,-,"-","-",-,-,"-",-,"-","-","-","-","-","-","-",146.87,0,-,"-","-",-,"-",-,-,"-","-",-,-,"-",-,-> - -
+
+
+SPLUNK_Access Info: 1683226287.838 0 172.16.222.20 TCP_DENIED_SSL/401 0 POST https://pwlva01wsaa003:443/B0001D0000N0000N0000F0000S0000R0004/172.16.222.20/https://android.clients.google.com/checkin - NONE/- - OTHER-NONE-NONE-NONE-NONE-NONE-NONE-NONE <"-",-,-,"-",-,-,-,-,"-",-,-,-,"-",-,-,"-","-",-,-,"-",-,"-","-","-","-","-","-","-",0.00,0,-,"-","-",-,"-",-,-,"-","-",-,-,"-",-,-> - -
+
+
+SPLUNK_Access Info: 1683226287.830 1 10.174.4.249 TCP_DENIED/403 0 GET http://msedge.b.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/a360ec67-91f8-46cf-897b-8bcbcd508b07?P1=1683617481&P2=404&P3=2&P4=OOPgx%2b5%2fwQ%2fsXLLKeTcAIjzSAO1Xizr6wU2TaYgen5YQFeMyJCXV8hgjlcL5Ap534DX4Xeyahi8T9Y%2blqVxBXw%3d%3d "edaitch@Wintrust" NONE/- - BLOCK_WEBCAT_12-DefaultGroup-Microsoft_Store-DefaultGroup-NONE-NONE-NONE-NONE <"IW_swup",9.2,-,"-",-,-,-,-,"-",-,-,-,"-",-,-,"-","-",-,-,"IW_swup",-,"-","Software Updates","-","Unknown","Unknown","-","-",0.00,0,-,"-","-",-,"-",-,-,"-","-",-,-,"-",-,-> - -
+
+SPLUNK_Access Info: 1683226287.848 20 10.157.1.130 TCP_MISS_SSL/200 7593 GET https://m.media-amazon.com:443/images/I/91MowzF+WZL._AC_SY200_.jpg "jbutz@Wintrust" DIRECT/m.media-amazon.com image/jpeg DEFAULT_CASE_12-DefaultGroup-AuthenticationLDAP-DefaultGroup-NONE-NONE-DefaultGroup-NONE <"IW_infr",5.0,1,"-",0,0,0,1,"-",-,-,-,"-",1,-,"-","-",-,-,"IW_infr",-,"Unknown","Infrastructure and Content Delivery Networks","-","Unknown","Unknown","-","-",3037.20,0,-,"Unknown","-",-,"-",-,-,"-","-",-,-,"-",-,-> - -
+
+SPLUNK_Access Info: 1683226287.634 7128 172.16.213.110 TCP_MISS/200 4713 TCP_CONNECT 35.190.66.71:443 "wa04709@Mortgage" DIRECT/wintrust.egnyte.com - PASSTHRU_CUSTOMCAT_7-DefaultGroup-Bank_and_Cert_Sites-DefaultGroup-NONE-NONE-DefaultGroup-NONE <"C_Ban0",-,-,"-",-,-,-,-,"-",-,-,-,"-",-,-,"-","-",-,-,"-",-,"-","-","-","-","-","-","-",5.29,0,-,"-","-",-,"-",-,-,"-","-",-,-,"-",-,-> - -
+
+SPLUNK_Access Info: 1683226287.622 0 172.16.207.103 TCP_DENIED_SSL/401 0 POST https://pwlva01wsaa002:443/B0001D0000N0000N0000F0000S0000R0004/172.16.207.103/https://android.clients.google.com/checkin - NONE/- - OTHER-NONE-NONE-NONE-NONE-NONE-NONE-NONE <"-",-,-,"-",-,-,-,-,"-",-,-,-,"-",-,-,"-","-",-,-,"-",-,"-","-","-","-","-","-","-",0.00,0,-,"-","-",-,"-",-,-,"-","-",-,-,"-",-,-> - -
